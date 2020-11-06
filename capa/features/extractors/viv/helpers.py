@@ -5,21 +5,16 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 #  is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
-
-from networkx import nx
-from networkx.algorithms.components import strongly_connected_components
+from vivisect.const import XR_TO, REF_CODE
 
 
-def has_loop(edges, threshold=2):
-    """check if a list of edges representing a directed graph contains a loop
-
-    args:
-        edges: list of edge sets representing a directed graph i.e. [(1, 2), (2, 1)]
-        threshold: min number of nodes contained in loop
-
-    returns:
-        bool
+def get_coderef_from(vw, va):
     """
-    g = nx.DiGraph()
-    g.add_edges_from(edges)
-    return any(len(comp) >= threshold for comp in strongly_connected_components(g))
+    return first code `tova` whose origin is the specified va
+    return None if no code reference is found
+    """
+    xrefs = vw.getXrefsFrom(va, REF_CODE)
+    if len(xrefs) > 0:
+        return xrefs[0][XR_TO]
+    else:
+        return None
